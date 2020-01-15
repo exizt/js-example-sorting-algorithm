@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, minimum-scale=1.0, width=device-width" />
+<meta charset="utf-8">
+<title>테스트</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script>
+//var g_data = [5, 3, 2, 9, 1];
+//var g_data = [5, 2, 9, 1];
+var g_data = [95, 5, 3, 2, 9, 1, 11, 91, 33, 22];
+
+var g_sort = {
+	bubble: { loop_count: 0, swap_count: 0 },
+	selection: { loop_count: 0, swap_count: 0 },
+	insertion: { loop_count: 0, swap_count: 0 },
+	quick: { loop_count: 0, swap_count: 0 }
+};
+
+document.addEventListener("DOMContentLoaded",function(){
+	append_result("<h5>원본</h5>");
+		showData("원본", g_data);
+		append_result("<br>");
+
+		call_bubble_sort();
+		call_selection_sort();
+		call_insertion_sort();
+		call_quick_sort();
+		console.log(JSON.stringify(g_sort));
+});
+
+function showData(index, data) {
+	var html = "[" + index + "] ";
+	html += data.join(", ");
+	html += "<br>";
+	append_result(html);
+}
+
+/**
+* 결과에 html 추가
+*/
+function append_result(html) {
+	//$("#results").append(html);
+	var d = document.querySelector("#results");
+	d.insertAdjacentHTML('beforeend', html);
+}
+
+function call_bubble_sort() {
+	var data = Object.create(g_data);
+	var selected_sort = g_sort.bubble;
+	append_result("<h5>버블 정렬</h5>");
+	Bubble_Sort(data,function(){g_sort.bubble.swap_count++},function(){g_sort.bubble.loop_count++});
+	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
+}
+
+function call_insertion_sort() {
+	var data = Object.create(g_data);
+	var selected_sort = g_sort.insertion;
+	append_result("<h5>삽입 정렬</h5>");
+	Insertion_Sort(data);
+	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
+}
+
+function call_selection_sort() {
+	var data = Object.create(g_data);
+	var selected_sort = g_sort.selection;
+	append_result("<h5>선택 정렬</h5>");
+	Selection_Sort(data);
+	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
+}
+
+function call_quick_sort() {
+	var data = Object.create(g_data);
+	var selected_sort = g_sort.quick;
+	append_result("<h5>퀵 정렬</h5>");
+	Quick_Sort(data);
+	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
+}
+
+
+
+/**
+* Bubble Sort 버블 정렬
+* 
+* O( n(n-1)/2 )
+*/
+function Bubble_Sort(dataSet,addSwapCount,addLoopCount) {
+	var size = dataSet.length;
+	for (var i = 0; i < size - 1; i++) {
+		for (var j = 0; j < size - i - 1; j++) {
+			if (dataSet[j] > dataSet[j + 1]) {
+				swap(dataSet, j, j + 1);
+				showData(getSwapCount(), dataSet);
+			}
+			addLoopCount();
+		}
+	}
+
+	function swap(data, i, j) {
+		var temp = data[i];
+		data[i] = data[j];
+		data[j] = temp;
+		//숫자 세려고 추가
+		addSwapCount();
+	}
+	function getSwapCount() {
+		return g_sort.bubble.swap_count;
+	}
+}
+
+/*
+* Selection Sort 선택 정렬
+* O( n^2 )
+*/
+function Selection_Sort(dataSet) {
+	var size = dataSet.length;
+	var min_idx = 0;
+	for (var i = 0; i < size; i++) {
+		min_idx = i;
+		for (var j = i; j < size - 1; j++) {
+			if (dataSet[min_idx] > dataSet[j + 1]) {
+				min_idx = j + 1;
+			}
+			addLoopCount();
+		}
+		if (min_idx != i) {
+			swap(dataSet, i, min_idx);
+			showData(getSwapCount(), dataSet);
+		}
+	}
+	function swap(data, i, j) {
+		var temp = data[i];
+		data[i] = data[j];
+		data[j] = temp;
+
+		addSwapCount();
+	}
+	function getSwapCount() {
+		return g_sort.selection.swap_count;
+	}
+	function addSwapCount() {
+		g_sort.selection.swap_count++;
+	}
+
+	function addLoopCount() {
+		g_sort.selection.loop_count++;
+	}
+}
+
+/*
+* Insertion Sort 삽입 정렬
+*/
+function Insertion_Sort(dataSet) {
+	var size = dataSet.length;
+	var remember;
+	for (var i = 1; i < size; i++) {
+		remember = dataSet[i];//2번째 값부터 체크.
+
+		var j = 0;
+		for (j = i - 1; j >= 0; j--) {
+			//remember 값보다 크면 한칸씩 이동.
+			if (dataSet[j] > remember) {
+				dataSet[j + 1] = dataSet[j];
+			} else {
+				//remember 값과 같거나 작은것이 발생하면 중지.
+				break;
+			}
+			addLoopCount();
+		}
+		dataSet[j + 1] = remember;
+		addSwapCount();
+		showData(getSwapCount(), dataSet);
+	}
+
+	function swap(data, i, j) {
+		var temp = data[i];
+		data[i] = data[j];
+		data[j] = temp;
+
+		addSwapCount();
+	}
+	function getSwapCount() {
+		return g_sort.insertion.swap_count;
+	}
+	function addSwapCount() {
+		g_sort.insertion.swap_count++;
+	}
+
+	function addLoopCount() {
+		g_sort.insertion.loop_count++;
+	}
+}
+
+/*
+* Quick Sort 퀵 정렬
+*/
+function Quick_Sort(dataSet) {
+	var size = dataSet.length;
+	quick_unit(dataSet, 0, size);
+
+	function quick_unit(data, left, right) {
+		if (data.length <= 1) {
+			return data;
+		}
+		var lte = []; //less than
+		var gte = []; //greater than
+		var pivot = data[parseInt(data.length / 2)];
+		// gte 와 lte 를 나누는 과정.
+		for (var i = data.length - 1; i >= 0; i--) {
+			if (data[i] > pivot) {
+				gte.push(data[i]);
+			} else if (data[i] < pivot) {
+				lte.push(data[i]);
+			}
+		}
+		addLoopCount();
+		addSwapCount();
+		showData(getSwapCount(), data);
+
+		return Array.prototype.concat(quick_unit(lte), pivot, quick_unit(gte));
+	}
+
+	function swap(data, i, j) {
+		var temp = data[i];
+		data[i] = data[j];
+		data[j] = temp;
+
+		addSwapCount();
+	}
+	function getSwapCount() {
+		return g_sort.quick.swap_count;
+	}
+	function addSwapCount() {
+		g_sort.quick.swap_count++;
+	}
+
+	function addLoopCount() {
+		g_sort.quick.loop_count++;
+	}
+}
+</script>
+</head>
+
+<body>
+	<div class="container">
+		<h3>Sort</h3>
+		<div class="card">
+			<div class="card-body" id="results">
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
