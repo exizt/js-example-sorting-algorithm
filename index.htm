@@ -18,15 +18,15 @@ var g_sort = {
 };
 
 document.addEventListener("DOMContentLoaded",function(){
-	append_result("<h5>원본</h5>");
-		showData("원본", g_data);
-		append_result("<br>");
+	append_result("<h2>원본</h2>");
+    showData("원본", g_data);
+    append_result("<br>");
 
-		call_bubble_sort();
-		call_selection_sort();
-		call_insertion_sort();
-		call_quick_sort();
-		console.log(JSON.stringify(g_sort));
+    call_bubble_sort();
+    call_selection_sort();
+    call_insertion_sort();
+    call_quick_sort();
+    console.log(JSON.stringify(g_sort));
 });
 
 function showData(index, data) {
@@ -48,7 +48,7 @@ function append_result(html) {
 function call_bubble_sort() {
 	var data = Object.create(g_data);
 	var selected_sort = g_sort.bubble;
-	append_result("<h5>버블 정렬</h5>");
+	append_result("<h2>버블 정렬</h2>");
 	Bubble_Sort(data,function(){g_sort.bubble.swap_count++},function(){g_sort.bubble.loop_count++});
 	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
 }
@@ -56,7 +56,7 @@ function call_bubble_sort() {
 function call_insertion_sort() {
 	var data = Object.create(g_data);
 	var selected_sort = g_sort.insertion;
-	append_result("<h5>삽입 정렬</h5>");
+	append_result("<h2>삽입 정렬</h2>");
 	Insertion_Sort(data);
 	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
 }
@@ -64,7 +64,7 @@ function call_insertion_sort() {
 function call_selection_sort() {
 	var data = Object.create(g_data);
 	var selected_sort = g_sort.selection;
-	append_result("<h5>선택 정렬</h5>");
+	append_result("<h2>선택 정렬</h2>");
 	Selection_Sort(data);
 	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
 }
@@ -72,7 +72,7 @@ function call_selection_sort() {
 function call_quick_sort() {
 	var data = Object.create(g_data);
 	var selected_sort = g_sort.quick;
-	append_result("<h5>퀵 정렬</h5>");
+	append_result("<h2>퀵 정렬</h2>");
 	Quick_Sort(data);
 	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
 }
@@ -243,7 +243,7 @@ function Quick_Sort(dataSet) {
 
 <body>
 	<div class="container">
-		<h3>Sort</h3>
+		<h1>Sorting algorithm</h1>
 		<div class="card">
 			<div class="card-body" id="results">
 			</div>
