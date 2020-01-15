@@ -23,9 +23,9 @@ var g_sort = {
 * O( n(n-1)/2 )
 */
 function Bubble_Sort(dataSet,addSwapCount,addLoopCount) {
-	var size = dataSet.length;
-	for (var i = 0; i < size - 1; i++) {
-		for (var j = 0; j < size - i - 1; j++) {
+	const size = dataSet.length;
+	for (let i = 0; i < size - 1; i++) {
+		for (let j = 0; j < size - i - 1; j++) {
 			if (dataSet[j] > dataSet[j + 1]) {
 				swap(dataSet, j, j + 1);
 				showData(getSwapCount(), dataSet);
@@ -35,7 +35,7 @@ function Bubble_Sort(dataSet,addSwapCount,addLoopCount) {
 	}
 
 	function swap(data, i, j) {
-		var temp = data[i];
+		let temp = data[i];
 		data[i] = data[j];
 		data[j] = temp;
 		//숫자 세려고 추가
@@ -51,11 +51,11 @@ function Bubble_Sort(dataSet,addSwapCount,addLoopCount) {
 * O( n^2 )
 */
 function Selection_Sort(dataSet) {
-	var size = dataSet.length;
-	var min_idx = 0;
-	for (var i = 0; i < size; i++) {
+	const size = dataSet.length;
+	let min_idx = 0;
+	for (let i = 0; i < size; i++) {
 		min_idx = i;
-		for (var j = i; j < size - 1; j++) {
+		for (let j = i; j < size - 1; j++) {
 			if (dataSet[min_idx] > dataSet[j + 1]) {
 				min_idx = j + 1;
 			}
@@ -67,7 +67,7 @@ function Selection_Sort(dataSet) {
 		}
 	}
 	function swap(data, i, j) {
-		var temp = data[i];
+		let temp = data[i];
 		data[i] = data[j];
 		data[j] = temp;
 
@@ -89,12 +89,12 @@ function Selection_Sort(dataSet) {
 * Insertion Sort 삽입 정렬
 */
 function Insertion_Sort(dataSet) {
-	var size = dataSet.length;
-	var remember;
-	for (var i = 1; i < size; i++) {
+	const size = dataSet.length;
+	let remember;
+	for (let i = 1; i < size; i++) {
 		remember = dataSet[i];//2번째 값부터 체크.
 
-		var j = 0;
+		let j = 0;
 		for (j = i - 1; j >= 0; j--) {
 			//remember 값보다 크면 한칸씩 이동.
 			if (dataSet[j] > remember) {
@@ -111,7 +111,7 @@ function Insertion_Sort(dataSet) {
 	}
 
 	function swap(data, i, j) {
-		var temp = data[i];
+		let temp = data[i];
 		data[i] = data[j];
 		data[j] = temp;
 
@@ -134,18 +134,18 @@ function Insertion_Sort(dataSet) {
 * 어... 이거 swap 횟수를 어떻게 세야하나...?
 */
 function Quick_Sort(dataSet) {
-	var size = dataSet.length;
+	const size = dataSet.length;
 	quick_unit(dataSet, 0, size);
 
 	function quick_unit(data, left, right) {
 		if (data.length <= 1) {
 			return data;
 		}
-		var lte = []; //less than
-		var gte = []; //greater than
-		var pivot = data[parseInt(data.length / 2)];
+		let lte = []; //less than
+		let gte = []; //greater than
+		let pivot = data[parseInt(data.length / 2)];
 		// gte 와 lte 를 나누는 과정.
-		for (var i = data.length - 1; i >= 0; i--) {
+		for (let i = data.length - 1; i >= 0; i--) {
 			if (data[i] > pivot) {
 				gte.push(data[i]);
 			} else if (data[i] < pivot) {
@@ -192,33 +192,33 @@ function showData(index, data) {
 */
 function append_result(html) {
 	//$("#results").append(html);
-	var d = document.querySelector("#results");
+	let d = document.querySelector("#results");
 	d.insertAdjacentHTML('beforeend', html);
 }
 
 function call_bubble_sort() {
-	var selected_sort = g_sort.bubble;
+	let selected_sort = g_sort.bubble;
 	append_result("<h2>버블 정렬</h2>");
 	Bubble_Sort(Object.create(g_data),()=>{g_sort.bubble.swap_count++},()=>{g_sort.bubble.loop_count++});
 	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
 }
 
 function call_insertion_sort() {
-	var selected_sort = g_sort.insertion;
+	let selected_sort = g_sort.insertion;
 	append_result("<h2>삽입 정렬</h2>");
 	Insertion_Sort(Object.create(g_data));
 	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
 }
 
 function call_selection_sort() {
-	var selected_sort = g_sort.selection;
+	let selected_sort = g_sort.selection;
 	append_result("<h2>선택 정렬</h2>");
 	Selection_Sort(Object.create(g_data));
 	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
 }
 
 function call_quick_sort() {
-	var selected_sort = g_sort.quick;
+	let selected_sort = g_sort.quick;
 	append_result("<h2>퀵 정렬</h2>");
 	Quick_Sort(Object.create(g_data));
 	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
