@@ -17,68 +17,6 @@ var g_sort = {
 	quick: { loop_count: 0, swap_count: 0 }
 };
 
-document.addEventListener("DOMContentLoaded",function(){
-	append_result("<h2>원본</h2>");
-    showData("원본", g_data);
-    append_result("<br>");
-
-    call_bubble_sort();
-    call_selection_sort();
-    call_insertion_sort();
-    call_quick_sort();
-    console.log(JSON.stringify(g_sort));
-});
-
-function showData(index, data) {
-	var html = "[" + index + "] ";
-	html += data.join(", ");
-	html += "<br>";
-	append_result(html);
-}
-
-/**
-* 결과에 html 추가
-*/
-function append_result(html) {
-	//$("#results").append(html);
-	var d = document.querySelector("#results");
-	d.insertAdjacentHTML('beforeend', html);
-}
-
-function call_bubble_sort() {
-	var data = Object.create(g_data);
-	var selected_sort = g_sort.bubble;
-	append_result("<h2>버블 정렬</h2>");
-	Bubble_Sort(data,function(){g_sort.bubble.swap_count++},function(){g_sort.bubble.loop_count++});
-	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
-}
-
-function call_insertion_sort() {
-	var data = Object.create(g_data);
-	var selected_sort = g_sort.insertion;
-	append_result("<h2>삽입 정렬</h2>");
-	Insertion_Sort(data);
-	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
-}
-
-function call_selection_sort() {
-	var data = Object.create(g_data);
-	var selected_sort = g_sort.selection;
-	append_result("<h2>선택 정렬</h2>");
-	Selection_Sort(data);
-	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
-}
-
-function call_quick_sort() {
-	var data = Object.create(g_data);
-	var selected_sort = g_sort.quick;
-	append_result("<h2>퀵 정렬</h2>");
-	Quick_Sort(data);
-	append_result("최종 결과 : 루프 횟수 (" + selected_sort.loop_count + "), 치환 횟수 (" + selected_sort.swap_count + ") <br><br>");
-}
-
-
-
 /**
 * Bubble Sort 버블 정렬
 * 
@@ -193,6 +131,7 @@ function Insertion_Sort(dataSet) {
 
 /*
 * Quick Sort 퀵 정렬
+* 어... 이거 swap 횟수를 어떻게 세야하나...?
 */
 function Quick_Sort(dataSet) {
 	var size = dataSet.length;
@@ -212,25 +151,18 @@ function Quick_Sort(dataSet) {
 			} else if (data[i] < pivot) {
 				lte.push(data[i]);
 			}
+			addLoopCount();
+			addPushCount();
 		}
-		addLoopCount();
-		addSwapCount();
-		showData(getSwapCount(), data);
+		showData("push-"+getPushCount(), data);
 
 		return Array.prototype.concat(quick_unit(lte), pivot, quick_unit(gte));
 	}
 
-	function swap(data, i, j) {
-		var temp = data[i];
-		data[i] = data[j];
-		data[j] = temp;
-
-		addSwapCount();
-	}
-	function getSwapCount() {
+	function getPushCount() {
 		return g_sort.quick.swap_count;
 	}
-	function addSwapCount() {
+	function addPushCount() {
 		g_sort.quick.swap_count++;
 	}
 
@@ -238,6 +170,60 @@ function Quick_Sort(dataSet) {
 		g_sort.quick.loop_count++;
 	}
 }
+
+document.addEventListener("DOMContentLoaded",() => {
+	append_result("<h2>원본</h2>");
+	showData("원본", g_data);
+    append_result("<br>");
+
+    call_bubble_sort();
+    call_selection_sort();
+    call_insertion_sort();
+    call_quick_sort();
+    console.log(JSON.stringify(g_sort));
+});
+
+function showData(index, data) {
+	append_result(`[${index}] ${data.join(", ")}<br>`);
+}
+
+/**
+* 결과에 html 추가
+*/
+function append_result(html) {
+	//$("#results").append(html);
+	var d = document.querySelector("#results");
+	d.insertAdjacentHTML('beforeend', html);
+}
+
+function call_bubble_sort() {
+	var selected_sort = g_sort.bubble;
+	append_result("<h2>버블 정렬</h2>");
+	Bubble_Sort(Object.create(g_data),()=>{g_sort.bubble.swap_count++},()=>{g_sort.bubble.loop_count++});
+	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
+}
+
+function call_insertion_sort() {
+	var selected_sort = g_sort.insertion;
+	append_result("<h2>삽입 정렬</h2>");
+	Insertion_Sort(Object.create(g_data));
+	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
+}
+
+function call_selection_sort() {
+	var selected_sort = g_sort.selection;
+	append_result("<h2>선택 정렬</h2>");
+	Selection_Sort(Object.create(g_data));
+	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
+}
+
+function call_quick_sort() {
+	var selected_sort = g_sort.quick;
+	append_result("<h2>퀵 정렬</h2>");
+	Quick_Sort(Object.create(g_data));
+	append_result(`최종 결과 : 루프 횟수 (${selected_sort.loop_count}), 치환 횟수 (${selected_sort.swap_count}) <br><br>`);
+}
+
 </script>
 </head>
 
